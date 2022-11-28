@@ -139,14 +139,16 @@ class App {
   }
 
   async #loadTextures() {
-    const [noise] = await textureLoader.load([
-      '/noise.jpg'
+    const [noise, matcap] = await textureLoader.load([
+      '/noise.jpg',
+      '/matcap.png'
     ])
 
     noise.wrapS = noise.wrapT = RepeatWrapping
 
     this.textures = {
-      noise
+      noise,
+      matcap
     }
   }
 
@@ -163,6 +165,7 @@ class App {
     this.sphere = new Mesh(geometry, SphereMaterial)
 
     this.sphere.material.uniforms.t_Noise.value = this.textures.noise
+    this.sphere.material.uniforms.t_Matcap.value = this.textures.matcap
 
     this.sphere.position.set(1.7, 0, 0)
 

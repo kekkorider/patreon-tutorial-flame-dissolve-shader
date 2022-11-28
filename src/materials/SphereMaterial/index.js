@@ -11,6 +11,7 @@ export const SphereMaterial = new ShaderMaterial({
   uniforms: {
     u_EffectOrigin: { value: new Vector3() },
     u_Time: { value: 0 },
+    t_Matcap: { value: null },
     t_Noise: { value: null }
   }
 })
