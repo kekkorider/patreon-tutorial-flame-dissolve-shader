@@ -11,6 +11,7 @@ import {
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls'
 
 import { WireframeMaterial } from './materials/WireframeMaterial'
 
@@ -45,6 +46,7 @@ class App {
     this.#createSphere()
     this.#addListeners()
     this.#createControls()
+    this.#createTransformControls()
 
     if (this.hasDebug) {
       const { Debug } = await import('./Debug.js')
@@ -109,6 +111,18 @@ class App {
 
   #createControls() {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+  }
+
+  #createTransformControls() {
+    this.transformControls = new TransformControls(this.camera, this.renderer.domElement)
+
+    this.transformControls.addEventListener('dragging-changed', event => {
+      this.controls.enabled = !event.value
+    })
+
+    this.transformControls.attach(this.sphere)
+
+    this.scene.add(this.transformControls)
   }
 
   #createClock() {
