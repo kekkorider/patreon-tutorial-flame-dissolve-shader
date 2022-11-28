@@ -6,7 +6,8 @@ import {
   Clock,
   Vector2,
   BoxGeometry,
-  Mesh
+  Mesh,
+  SphereGeometry
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -41,6 +42,7 @@ class App {
 
     this.#createClock()
     this.#createEffectOrigin()
+    this.#createSphere()
     this.#addListeners()
     this.#createControls()
 
@@ -119,6 +121,15 @@ class App {
     this.effectOrigin = new Mesh(geometry, WireframeMaterial)
 
     this.scene.add(this.effectOrigin)
+  }
+
+  #createSphere() {
+    const geometry = new SphereGeometry(1, 32, 32)
+    this.sphere = new Mesh(geometry, WireframeMaterial)
+
+    this.sphere.position.set(1.7, 0, 0)
+
+    this.scene.add(this.sphere)
   }
 
   #addListeners() {
