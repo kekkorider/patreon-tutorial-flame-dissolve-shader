@@ -9,6 +9,8 @@ export const SphereMaterial = new ShaderMaterial({
   transparent: true,
   side: DoubleSide,
   uniforms: {
-    u_EffectOrigin: { value: new Vector3() }
+    u_EffectOrigin: { value: new Vector3() },
+    u_Time: { value: 0 },
+    t_Noise: { value: null }
   }
 })

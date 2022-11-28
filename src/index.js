@@ -7,7 +7,8 @@ import {
   Vector2,
   BoxGeometry,
   Mesh,
-  SphereGeometry
+  SphereGeometry,
+  RepeatWrapping
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -15,6 +16,8 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 
 import { WireframeMaterial } from './materials/WireframeMaterial'
 import { SphereMaterial } from './materials/SphereMaterial'
+
+import { textureLoader } from './loaders'
 
 class App {
   #resizeCallback = () => this.#onResize()
@@ -31,6 +34,8 @@ class App {
     this.#createScene()
     this.#createCamera()
     this.#createRenderer()
+
+    await this.#loadTextures()
 
     if (this.hasPhysics) {
       const { Simulation } = await import('./physics/Simulation')
@@ -81,6 +86,7 @@ class App {
     this.effectOrigin.position.y = Math.sin(elapsed)
 
     this.sphere.material.uniforms.u_EffectOrigin.value = this.effectOrigin.position
+    this.sphere.material.uniforms.u_Time.value = elapsed
 
     this.simulation?.update()
   }
@@ -132,6 +138,18 @@ class App {
     this.clock = new Clock()
   }
 
+  async #loadTextures() {
+    const [noise] = await textureLoader.load([
+      '/noise.jpg'
+    ])
+
+    noise.wrapS = noise.wrapT = RepeatWrapping
+
+    this.textures = {
+      noise
+    }
+  }
+
   #createEffectOrigin() {
     const geometry = new BoxGeometry(0.35, 0.35, 0.35)
 
@@ -143,6 +161,8 @@ class App {
   #createSphere() {
     const geometry = new SphereGeometry(1, 32, 32)
     this.sphere = new Mesh(geometry, SphereMaterial)
+
+    this.sphere.material.uniforms.t_Noise.value = this.textures.noise
 
     this.sphere.position.set(1.7, 0, 0)
 
