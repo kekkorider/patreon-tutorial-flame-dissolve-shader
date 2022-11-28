@@ -14,6 +14,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls'
 
 import { WireframeMaterial } from './materials/WireframeMaterial'
+import { SphereMaterial } from './materials/SphereMaterial'
 
 class App {
   #resizeCallback = () => this.#onResize()
@@ -79,6 +80,8 @@ class App {
 
     this.effectOrigin.position.y = Math.sin(elapsed)
 
+    this.sphere.material.uniforms.u_EffectOrigin.value = this.effectOrigin.position
+
     this.simulation?.update()
   }
 
@@ -139,7 +142,7 @@ class App {
 
   #createSphere() {
     const geometry = new SphereGeometry(1, 32, 32)
-    this.sphere = new Mesh(geometry, WireframeMaterial)
+    this.sphere = new Mesh(geometry, SphereMaterial)
 
     this.sphere.position.set(1.7, 0, 0)
 
