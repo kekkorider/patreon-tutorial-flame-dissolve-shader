@@ -14,6 +14,10 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls'
 
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
+
 import { WireframeMaterial } from './materials/WireframeMaterial'
 import { SphereMaterial } from './materials/SphereMaterial'
 
@@ -53,6 +57,7 @@ class App {
     this.#addListeners()
     this.#createControls()
     this.#createTransformControls()
+    this.#createPostprocess()
 
     if (this.hasDebug) {
       const { Debug } = await import('./Debug.js')
@@ -92,7 +97,7 @@ class App {
   }
 
   #render() {
-    this.renderer.render(this.scene, this.camera)
+    this.composer.render()
   }
 
   #createScene() {
@@ -116,6 +121,16 @@ class App {
     this.renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio))
     this.renderer.setClearColor(0x121212)
     this.renderer.physicallyCorrectLights = true
+  }
+
+  #createPostprocess() {
+    const renderPass = new RenderPass(this.scene, this.camera)
+
+    this.bloomPass = new UnrealBloomPass(this.screen, 0.8, 0.4, 0.7)
+
+    this.composer = new EffectComposer(this.renderer)
+    this.composer.addPass(renderPass)
+    this.composer.addPass(this.bloomPass)
   }
 
   #createControls() {

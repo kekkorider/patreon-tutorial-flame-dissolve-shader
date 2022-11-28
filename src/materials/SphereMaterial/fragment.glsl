@@ -29,7 +29,7 @@ void main() {
   float falloff = step(1.0, distancefromEffectOrigin - noise);
   float glowFalloff = step(1.15, distancefromEffectOrigin - noise);
 
-  outgoingLight = mix(glowColor.rgb, outgoingLight, glowFalloff);
+  outgoingLight = mix(glowColor.rgb + glowColor.rgb, outgoingLight, glowFalloff);
 
   #include <output_fragment>
 
