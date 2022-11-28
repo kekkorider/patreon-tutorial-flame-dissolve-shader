@@ -10,6 +10,7 @@ uniform float u_Time;
 
 void main() {
   vec4 diffuseColor = vec4(1.0);
+  vec4 glowColor = vec4(0.2667, 0.8745, 0.6, 1.0);
 
   #include <normal_fragment_begin>
 
@@ -26,8 +27,9 @@ void main() {
 
   float distancefromEffectOrigin = distance(vWorldPosition, u_EffectOrigin);
   float falloff = step(1.0, distancefromEffectOrigin - noise);
+  float glowFalloff = step(1.15, distancefromEffectOrigin - noise);
 
-  outgoingLight *= vec3(falloff);
+  outgoingLight = mix(glowColor.rgb, outgoingLight, glowFalloff);
 
   #include <output_fragment>
 
