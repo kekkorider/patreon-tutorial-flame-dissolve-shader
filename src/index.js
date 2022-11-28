@@ -4,10 +4,14 @@ import {
   WebGLRenderer,
   PerspectiveCamera,
   Clock,
-  Vector2
+  Vector2,
+  BoxGeometry,
+  Mesh
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
+import { WireframeMaterial } from './materials/WireframeMaterial'
 
 class App {
   #resizeCallback = () => this.#onResize()
@@ -36,6 +40,7 @@ class App {
     }
 
     this.#createClock()
+    this.#createEffectOrigin()
     this.#addListeners()
     this.#createControls()
 
@@ -67,6 +72,8 @@ class App {
 
   #update() {
     const elapsed = this.clock.getElapsedTime()
+
+    this.effectOrigin.position.y = Math.sin(elapsed)
 
     this.simulation?.update()
   }
@@ -104,6 +111,14 @@ class App {
 
   #createClock() {
     this.clock = new Clock()
+  }
+
+  #createEffectOrigin() {
+    const geometry = new BoxGeometry(0.35, 0.35, 0.35)
+
+    this.effectOrigin = new Mesh(geometry, WireframeMaterial)
+
+    this.scene.add(this.effectOrigin)
   }
 
   #addListeners() {
